@@ -26,7 +26,7 @@ INCLUDES = -Iinclude -L$(LLVM)/lib
 
 LIBS = -lomptarget -lm
 
-COMPILE = $(LLVM)/bin/clang++
+COMPILE = $(LLVM)/bin/clang++ --gcc-toolchain=/usr
 
 ARGS_HOST =
 ARGS_HARPSIM = -fopenmp -fopenmp-targets=harpsim

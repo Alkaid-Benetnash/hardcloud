@@ -9,8 +9,8 @@
   url = https://github.com/lsc-openmp/llvm
 [submodule "openmp"]
   path = openmp
-  url = https://github.com/lsc-openmp/openmp
-  branch = feature-opae
+  url = https://github.com/Alkaid-Benetnash/openmp
+  branch = vai
 [submodule "clang"]
   path = clang
   url = https://github.com/lsc-openmp/clang
