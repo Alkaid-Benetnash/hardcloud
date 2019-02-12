@@ -5,7 +5,7 @@
 #
 
 # TODO: check this configuration
-export INSTALL_DIR=/home/public/hardcloud/install
+export INSTALL_DIR=/srv/nfs/hardcloud/install
 # export QUARTUS_HOME=/opt/altera/17.1/quartus
 # export MTI_HOME=/opt/altera/17.1/modelsim_ae
 # export ASE_WORKDIR=~/ase/work
