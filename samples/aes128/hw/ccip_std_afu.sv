@@ -54,6 +54,10 @@ module ccip_std_afu
   localparam MPF_DFH_MMIO_ADDR = 'h1000;
 
   logic clk;
+  logic resetQQQQ;
+  logic resetQQQ;
+  logic resetQQ;
+  logic resetQ;
   logic reset;
 
   logic [127:0] key;
@@ -75,7 +79,13 @@ module ccip_std_afu
 
   // combinational logic
   assign clk   = pClkDiv2;
-  assign reset = pck_cp2af_softReset;
+  always_ff@(posedge pClkDiv2) begin
+	  resetQQQQ <= pck_cp2af_softReset;
+	  resetQQQ <= resetQQQQ;
+	  resetQQ <= resetQQQ;
+	  resetQ <= resetQQ;
+	  reset <= resetQ;
+  end
 
   always_comb begin
     ccip_rx.c0 = afu.c0Rx;
