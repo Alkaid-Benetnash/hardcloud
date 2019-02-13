@@ -34,7 +34,7 @@
 import ccip_if_pkg::*;
 import aes128_pkg::*;
 
-module ccip_std_afu
+module aes128_mux
 (
   // CCI-P Clocks and Resets
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
@@ -212,5 +212,5 @@ module ccip_std_afu
     .valid_out    (valid_rx)
   );
 
-endmodule : ccip_std_afu
+endmodule : aes128_mux
 

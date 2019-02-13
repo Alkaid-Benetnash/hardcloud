@@ -3,7 +3,8 @@ SI:../sim/base_addenda.txt
 
 +incdir+.
 
-aes128.json
+cci_mux_test.json
+cci_mux_test.sv
 
 AddRoundKey.v
 KeyExpantion.v
