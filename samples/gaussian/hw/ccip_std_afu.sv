@@ -1,34 +1,3 @@
-//
-// Copyright (c) 2017, Intel Corporation
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//
-// Redistributions of source code must retain the above copyright notice, this
-// list of conditions and the following disclaimer.
-//
-// Redistributions in binary form must reproduce the above copyright notice,
-// this list of conditions and the following disclaimer in the documentation
-// and/or other materials provided with the distribution.
-//
-// Neither the name of the Intel Corporation nor the names of its contributors
-// may be used to endorse or promote products derived from this software
-// without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-// POSSIBILITY OF SUCH DAMAGE.
-
-// Include MPF data types, including the CCI interface pacakge.
 `include "cci_mpf_if.vh"
 
 import ccip_if_pkg::*;
@@ -36,7 +5,6 @@ import gaussian_pkg::*;
 
 module ccip_std_afu
 (
-  // CCI-P Clocks and Resets
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
   input  logic         pClkDiv2,           // 200MHz - CCI-P clock domain.
   input  logic         pClkDiv4,           // 100MHz - CCI-P clock domain.
@@ -51,135 +19,42 @@ module ccip_std_afu
   output t_if_ccip_Tx  pck_af2cp_sTx       // CCI-P Tx Port
 );
 
-  localparam MPF_DFH_MMIO_ADDR = 'h1000;
-
-  logic clk;
-  logic reset;
-
-  logic [511:0] data_tx;
-  logic         valid_tx;
-  logic [511:0] data_rx;
-  logic         valid_rx;
-
-  t_hc_control  hc_control;
-  t_hc_address  hc_dsm_base;
-  t_hc_buffer   hc_buffer[HC_BUFFER_SIZE];
-
-  t_if_ccip_Tx  ccip_tx;
-  t_if_ccip_Rx  ccip_rx;
-
-  // combinational logic
-  assign clk   = pClk;
-  assign reset = pck_cp2af_softReset;
-
-  always_comb begin
-    ccip_rx.c0 = afu.c0Rx;
-    ccip_rx.c1 = afu.c1Rx;
-
-    ccip_rx.c0TxAlmFull = afu.c0TxAlmFull;
-    ccip_rx.c1TxAlmFull = afu.c1TxAlmFull;
-
-    afu.c0Tx = cci_mpf_cvtC0TxFromBase(ccip_tx.c0);
-    afu.c1Tx = cci_mpf_cvtC1TxFromBase(ccip_tx.c1);
-
-    if (cci_mpf_c0TxIsReadReq(afu.c0Tx)) begin
-      afu.c0Tx.hdr.ext.addrIsVirtual       = 1'b1;
-      afu.c0Tx.hdr.ext.mapVAtoPhysChannel  = 1'b1;
-      afu.c0Tx.hdr.ext.checkLoadStoreOrder = 1'b1;
+    logic reset;
+    always_ff @(posedge pClk)
+    begin
+        reset <= pck_cp2af_softReset;
     end
 
-    if (cci_mpf_c1TxIsWriteReq(afu.c1Tx)) begin
-      afu.c1Tx.hdr.ext.addrIsVirtual       = 1'b1;
-      afu.c1Tx.hdr.ext.mapVAtoPhysChannel  = 1'b1;
-      afu.c1Tx.hdr.ext.checkLoadStoreOrder = 1'b1;
+    t_if_ccip_Rx sRx;
+    t_if_ccip_Tx sTx;
+
+    always_ff @(posedge pClk)
+    begin
+        sRx <= pck_cp2af_sRx;
+        pck_af2cp_sTx <= sTx;
     end
 
-    afu.c2Tx.mmioRdValid = 1'b0;
-  end
+    t_if_ccip_Rx sRx_async;
+    t_if_ccip_Tx sTx_async;
+    logic reset_async;
 
-  // cci_mpf
+    ccip_async_shim ccip_async_shim(
+        .bb_softreset(reset),
+        .bb_clk(pClk),
+        .bb_tx(sTx),
+        .bb_rx(sRx),
+        .afu_softreset(reset_async),
+        .afu_clk(pClkDiv2),
+        .afu_tx(sTx_async),
+        .afu_rx(sRx_async)
+        );
 
-  cci_mpf_if fiu(.clk(clk));
-  cci_mpf_if afu(.clk(clk));
-  cci_mpf_if afu_csrs(.clk(clk));
+    ccip_std_afu_async gaussian(
+        .pClk(pClkDiv2),
+        .pClkDiv2(pClkDiv4),
+        .pck_cp2af_softReset(reset_async),
+        .pck_cp2af_sRx(sRx_async),
+        .pck_af2cp_sTx(sTx_async)
+        );
 
-  ccip_wires_to_mpf
-  #(
-    // All inputs and outputs in PR region (AFU) must be registered!
-    .REGISTER_INPUTS(1),
-    .REGISTER_OUTPUTS(1)
-  )
-  map_ifc
-  (
-    .pClk                (clk),
-    .pClkDiv2            (pClkDiv2),
-    .pClkDiv4            (pClkDiv4),
-    .uClk_usr            (uClk_usr),
-    .uClk_usrDiv2        (uClk_usrDiv2),
-    .pck_cp2af_softReset (reset),
-    .pck_cp2af_pwrState  (pck_cp2af_pwrState),
-    .pck_cp2af_error     (pck_cp2af_error),
-    .pck_cp2af_sRx       (pck_cp2af_sRx),
-    .pck_af2cp_sTx       (pck_af2cp_sTx),
-    .fiu                 (fiu)
-  );
-
-  cci_mpf
-  #(
-    .SORT_READ_RESPONSES(1),
-    .PRESERVE_WRITE_MDATA(1),
-    .ENABLE_VTP(1),
-    .ENABLE_VC_MAP(0),
-    .ENABLE_DYNAMIC_VC_MAPPING(1),
-    .ENFORCE_WR_ORDER(0),
-    .ENABLE_PARTIAL_WRITES(0),
-    .DFH_MMIO_BASE_ADDR(MPF_DFH_MMIO_ADDR)
-  )
-  mpf
-  (
-    .clk(clk),
-    .fiu(afu_csrs),
-    .afu,
-    .c0NotEmpty(),
-    .c1NotEmpty()
-  );
-
-  gaussian_csr uu_gaussian_csr
-  (
-    .clk          (clk),
-    .reset        (reset),
-    .hc_control   (hc_control),
-    .hc_dsm_base  (hc_dsm_base),
-    .hc_buffer    (hc_buffer),
-    .fiu          (fiu),
-    .afu          (afu_csrs)
-  );
-
-  gaussian_requestor uu_gaussian_requestor
-  (
-    .clk          (clk),
-    .reset        (reset),
-    .hc_control   (hc_control),
-    .hc_dsm_base  (hc_dsm_base),
-    .hc_buffer    (hc_buffer),
-    .data_in      (data_rx),
-    .valid_in     (valid_rx),
-    .ccip_rx      (ccip_rx),
-    .ccip_c0_tx   (ccip_tx.c0),
-    .ccip_c1_tx   (ccip_tx.c1),
-    .data_out     (data_tx),
-    .valid_out    (valid_tx)
-  );
-
-  gaussian uu_gaussian
-  (
-    .clk       (clk),
-    .reset     (reset),
-    .data_in   (data_tx),
-    .valid_in  (valid_tx),
-    .data_out  (data_rx),
-    .valid_out (valid_rx)
-  );
-
-endmodule : ccip_std_afu
-
+endmodule

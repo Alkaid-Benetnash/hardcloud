@@ -65,7 +65,7 @@ int main()
   unsigned int* image_in  = image.array_in;
   unsigned int* image_out = image.array_out;
 
-  #pragma omp target device(HARPSIM) map(to: image_in[:size]) map(from: image_out[:size])
+  #pragma omp target device(TARGET) map(to: image_in[:size]) map(from: image_out[:size])
   #pragma omp parallel use(hrw) module(gaussian)
   {
     image_out[0] = image_in[0];

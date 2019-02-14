@@ -5,6 +5,7 @@ TARGET = gaussian
 
 TARGET_HOST = host_$(TARGET)
 TARGET_HARPSIM = harpsim_$(TARGET)
+TARGET_HARP = harp_$(TARGET)
 
 # where is the Clang/LLVM with support to Intel HARP offloading?
 ifeq ($(wildcard $(LLVM)),)
@@ -26,16 +27,20 @@ LIBS = -lomptarget -lpng
 COMPILE = $(LLVM)/bin/clang++
 
 ARGS_HOST =
-ARGS_HARPSIM = -fopenmp -fopenmp-targets=harpsim
+ARGS_HARPSIM = -fopenmp -fopenmp-targets=harpsim -DTARGET=HARPSIM
+ARGS_HARP = -fopenmp -fopenmp-targets=harp -DTARGET=HARP
 
 # Make it all!
-all: folder host harpsim
+all: folder host harpsim harp
 
 host:
 	$(COMPILE) $(ARGS_HOST) $(INCLUDES) $(LIBS) $(SRCS_FILES) -o build/$(TARGET_HOST)
 
 harpsim:
 	$(COMPILE) $(ARGS_HARPSIM) $(INCLUDES) $(LIBS) $(SRCS_FILES) -o build/$(TARGET_HARPSIM)
+
+harp:
+	$(COMPILE) $(ARGS_HARP) $(INCLUDES) $(LIBS) $(SRCS_FILES) -o build/$(TARGET_HARP)
 
 folder:
 	mkdir -p build/
