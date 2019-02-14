@@ -1,0 +1,14 @@
+QI:../par/cci_base_par_files.qsf
+SI:../sim/base_addenda.txt
+
++incdir+.
+
+fft.json
+
+fft_pkg.sv
+fft.sv
+fft_core.v
+fft_csr.sv
+fft_fifo.sv
+fft_requestor.sv
+ccip_std_afu.sv
