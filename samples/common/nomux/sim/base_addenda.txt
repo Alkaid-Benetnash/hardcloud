@@ -1,0 +1,2 @@
+-F $FPGA_BBB_CCI_SRC/BBB_ccip_async/hw/sim/ccip_async_sim_addenda.txt
+-F $FPGA_BBB_CCI_SRC/BBB_cci_mpf/hw/sim/cci_mpf_sim_addenda.txt
