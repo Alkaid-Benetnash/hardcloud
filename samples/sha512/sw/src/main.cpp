@@ -36,7 +36,7 @@ int main()
     input[i] = i;
   }
 
-  #pragma omp target device(HARPSIM) map(to: input[:NI]) map(from: output)
+  #pragma omp target device(TARGET) map(to: input[:NI]) map(from: output)
   #pragma omp parallel use(hrw) module(sha512)
   {
     output[0] = input[0];

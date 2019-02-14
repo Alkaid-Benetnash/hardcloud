@@ -1,0 +1,17 @@
+QI:../par/cci_base_par_files.qsf
+SI:../sim/base_addenda.txt
+
++incdir+.
+
+sha512.json
+
+sha512_pkg.sv
+sha512.sv
+sha512_csr.sv
+sha512_fifo.sv
+sha512_requestor.sv
+sha512_core.v
+sha512_h_constants.v
+sha512_k_constants.v
+sha512_w_mem.v
+ccip_std_afu.sv

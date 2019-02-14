@@ -55,6 +55,9 @@ module ccip_std_afu
 
   logic          clk;
   logic          reset;
+  logic          resetQ;
+  logic          resetQQ;
+  logic          resetQQQ;
   logic          block_valid;
   logic          digest_valid;
   logic          ready;
@@ -74,7 +77,12 @@ module ccip_std_afu
 
   // combinational logic
   assign clk   = pClkDiv4;
-  assign reset = pck_cp2af_softReset;
+  always @(posedge clk) begin
+    resetQQQ <= pck_cp2af_softReset;
+    resetQQ <= resetQQQ;
+    resetQ <= resetQQ;
+    reset <= resetQ;
+  end
 
   always_comb begin
     ccip_rx.c0 = afu.c0Rx;
