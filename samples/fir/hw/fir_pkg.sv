@@ -45,7 +45,7 @@ package fir_pkg;
     t_ccip_c0_ReqMmioHdr mmio_req_hdr;
     t_ccip_mmioAddr top_addr;
 
-    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h400);
+    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h100);
     mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
     top_addr = 16'h120 + 16'h10*HC_BUFFER_SIZE + 16'h8;
 
@@ -62,7 +62,7 @@ package fir_pkg;
     logic is_write;
     t_ccip_c0_ReqMmioHdr mmio_req_hdr;
 
-    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h400);
+    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h100);
     mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
 
     return is_write && (mmio_req_hdr.address == HC_CONTROL >> 2);
@@ -72,7 +72,7 @@ package fir_pkg;
     logic is_write;
     t_ccip_c0_ReqMmioHdr mmio_req_hdr;
 
-    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h400);
+    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h100);
     mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
 
     return is_write && (mmio_req_hdr.address == HC_DSM_BASE_LOW >> 2);

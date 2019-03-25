@@ -38,7 +38,7 @@ module grn_csr
   assign afu.c0Rx = fiu.c0Rx;
   assign afu.c1Rx = fiu.c1Rx;
 
-  assign is_csr_read = rx_mmio_channel.mmioRdValid & (mmio_req_hdr.address < 'h400);
+  assign is_csr_read = rx_mmio_channel.mmioRdValid & (mmio_req_hdr.address < 'h100);
 
   assign mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
 
@@ -72,7 +72,7 @@ module grn_csr
       case (mmio_req_hdr.address)
         HC_DEVICE_HEADER: // AFU DFH (device feature header)
           begin
-            tx_mmio_channel.data <= 'h1000000010000000;
+            tx_mmio_channel.data <= 'h1000000004000000;
           end
 
         // AFU_ID_L
