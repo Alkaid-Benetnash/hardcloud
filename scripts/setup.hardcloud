@@ -18,6 +18,7 @@ export INSTALL_DIR=/srv/nfs/hardcloud/install
 export LLVM=${INSTALL_DIR}
 #export FPGA_BBB_CCI_SRC=${INSTALL_DIR}
 export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=${INSTALL_DIR}/lib64:$LD_LIBRARY_PATH
 
 export OPAE_BASEDIR=${INSTALL_DIR}/opae-sdk
 export OPAE_SDK_BIN_PATH=/usr/local/bin
