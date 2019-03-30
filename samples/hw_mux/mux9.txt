@@ -1,0 +1,6 @@
+QI:par/cci_base_par_files.qsf
+SI:sim/base_addenda.txt
++define+NUM_AFUS=9
++define+WITH_MUX
+cci_mux_test.json
+cci_mux_test.sv
