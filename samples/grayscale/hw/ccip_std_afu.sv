@@ -33,8 +33,12 @@
 
 import ccip_if_pkg::*;
 import grayscale_pkg::*;
-
-module ccip_std_afu
+`ifdef WITH_MUX
+        `define TOP_IFC_NAME `AFU_WITHMUX_NAME
+`else
+        `define TOP_IFC_NAME `AFU_NOMUX_NAME
+`endif
+module `TOP_IFC_NAME
 (
   // CCI-P Clocks and Resets
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
@@ -180,5 +184,5 @@ module ccip_std_afu
     .valid_out (valid_rx)
   );
 
-endmodule : ccip_std_afu
+endmodule : `TOP_IFC_NAME
 

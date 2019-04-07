@@ -1,0 +1,10 @@
++incdir+.
++define+AFU_WITHMUX_NAME=grayscale_top
++define+AFU_NOMUX_NAME=ccip_std_afu
+
+grayscale_pkg.sv
+grayscale.sv
+grayscale_csr.sv
+grayscale_fifo.sv
+grayscale_requestor.sv
+ccip_std_afu.sv

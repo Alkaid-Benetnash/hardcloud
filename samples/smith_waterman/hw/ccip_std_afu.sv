@@ -214,5 +214,5 @@ module `TOP_IFC_NAME
     .conf_in      (conf)
   );
 
-endmodule : ccip_std_afu
+endmodule : `TOP_IFC_NAME
 

@@ -2,8 +2,12 @@
 
 import ccip_if_pkg::*;
 import gaussian_pkg::*;
-
-module ccip_std_afu
+`ifdef WITH_MUX
+        `define TOP_IFC_NAME `AFU_WITHMUX_NAME
+`else
+        `define TOP_IFC_NAME `AFU_NOMUX_NAME
+`endif
+module `TOP_IFC_NAME
 (
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
   input  logic         pClkDiv2,           // 200MHz - CCI-P clock domain.
@@ -20,9 +24,16 @@ module ccip_std_afu
 );
 
     logic reset;
+    logic resetQ;
+    logic resetQQ;
+    logic resetQQQ;
+
     always_ff @(posedge pClk)
     begin
-        reset <= pck_cp2af_softReset;
+        resetQQQ <= pck_cp2af_softReset;
+        resetQQ <= resetQQQ;
+        resetQ <= resetQQ;
+        reset <= resetQ;
     end
 
     t_if_ccip_Rx sRx;

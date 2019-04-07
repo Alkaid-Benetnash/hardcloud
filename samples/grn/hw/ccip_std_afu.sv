@@ -210,5 +210,5 @@ module `TOP_IFC_NAME
     .transient  (transient)
   );
 
-endmodule : ccip_std_afu
+endmodule : `TOP_IFC_NAME
 
