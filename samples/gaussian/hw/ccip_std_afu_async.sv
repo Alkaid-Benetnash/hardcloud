@@ -136,7 +136,6 @@ module ccip_std_afu_async
   #(
     .SORT_READ_RESPONSES(1),
     .PRESERVE_WRITE_MDATA(1),
-    .ENABLE_VTP(1),
     .ENABLE_VC_MAP(0),
     .ENABLE_DYNAMIC_VC_MAPPING(1),
     .ENFORCE_WR_ORDER(0),
