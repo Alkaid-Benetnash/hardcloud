@@ -1,0 +1,12 @@
++incdir+.
++define+AFU_WITHMUX_NAME=smith_waterman_top
++define+AFU_NOMUX_NAME=ccip_std_afu
+
+smith_waterman_pkg.sv
+sw_pe_affine.sv
+sw_gen_affine.sv
+sw_top_affine.sv
+smith_waterman_csr.sv
+smith_waterman_fifo.sv
+smith_waterman_requestor.sv
+ccip_std_afu.sv

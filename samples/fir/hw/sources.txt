@@ -1,0 +1,12 @@
++incdir+
++define+AFU_WITHMUX_NAME=fir_top
++define+AFU_NOMUX_NAME=ccip_std_afu
+
+fir_pkg.sv
+
+fir.sv
+fir_csr.sv
+fir_fifo.sv
+fir_requestor.sv
+ccip_std_afu.sv
+

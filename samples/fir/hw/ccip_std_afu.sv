@@ -33,8 +33,12 @@
 
 import ccip_if_pkg::*;
 import fir_pkg::*;
-
-module ccip_std_afu
+`ifdef WITH_MUX
+        `define TOP_IFC_NAME `AFU_WITHMUX_NAME
+`else
+        `define TOP_IFC_NAME `AFU_NOMUX_NAME
+`endif
+module `TOP_IFC_NAME
 (
   // CCI-P Clocks and Resets
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
@@ -55,6 +59,9 @@ module ccip_std_afu
 
   logic clk;
   logic reset;
+  logic resetQ;
+  logic resetQQ;
+  logic resetQQQ;
 
   logic [7:0] data_tx;
   logic       valid_tx;
@@ -73,7 +80,12 @@ module ccip_std_afu
 
   // combinational logic
   assign clk   = pClkDiv2;
-  assign reset = pck_cp2af_softReset;
+  always @(posedge clk) begin
+    resetQQQ <= pck_cp2af_softReset;
+    resetQQ <= resetQQQ;
+    resetQ <= resetQQ;
+    reset <= resetQ;
+  end
 
   always_comb begin
     ccip_rx.c0 = afu.c0Rx;

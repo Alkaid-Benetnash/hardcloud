@@ -1,0 +1,9 @@
++incdir+.
++define+AFU_WITHMUX_NAME=loopback_top
++define+AFU_NOMUX_NAME=ccip_std_afu
+
+hc_user_pkg.sv
+loopback_fifo.sv
+loopback_stream.sv
+loopback_index.sv
+ccip_std_afu.sv

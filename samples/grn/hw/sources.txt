@@ -1,0 +1,10 @@
++incdir+.
++define+AFU_WITHMUX_NAME=grn_top
++define+AFU_NOMUX_NAME=ccip_std_afu
+
+grn_pkg.sv
+grn_csr.sv
+grn_requestor.sv
+grn.sv
+top_grn.sv
+ccip_std_afu.sv
