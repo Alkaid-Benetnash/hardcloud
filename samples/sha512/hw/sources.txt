@@ -1,9 +1,6 @@
-QI:../par/cci_base_par_files.qsf
-SI:../sim/base_addenda.txt
-
 +incdir+.
-
-sha512.json
++define+AFU_WITHMUX_NAME=sha512_top
++define+AFU_NOMUX_NAME=ccip_std_afu
 
 sha512_pkg.sv
 sha512.sv

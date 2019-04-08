@@ -1,10 +1,6 @@
-QI:../par/cci_base_par_files.qsf
-SI:../sim/base_addenda.txt
-
 +incdir+.
-
-cci_mux_test.json
-cci_mux_test.sv
++define+AFU_WITHMUX_NAME=aes128_top
++define+AFU_NOMUX_NAME=ccip_std_afu
 
 AddRoundKey.v
 KeyExpantion.v
