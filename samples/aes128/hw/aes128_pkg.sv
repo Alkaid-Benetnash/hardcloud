@@ -46,7 +46,7 @@ package aes128_pkg;
     t_ccip_mmioAddr top_addr;
 
     mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
-    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h400);
+    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h100);
     top_addr = 16'h120 + 16'h10*HC_BUFFER_SIZE + 16'h8;
 
     has_sel = is_write &&
@@ -63,7 +63,7 @@ package aes128_pkg;
     t_ccip_c0_ReqMmioHdr mmio_req_hdr;
 
     mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
-    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h400);
+    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h100);
 
     return is_write && (mmio_req_hdr.address == HC_CONTROL >> 2);
   endfunction : hc_control_sel
@@ -73,7 +73,7 @@ package aes128_pkg;
     t_ccip_c0_ReqMmioHdr mmio_req_hdr;
 
     mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
-    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h400);
+    is_write = rx_mmio_channel.mmioWrValid & (mmio_req_hdr.address < 'h100);
 
     return is_write && (mmio_req_hdr.address == HC_DSM_BASE_LOW >> 2);
   endfunction : hc_dsm_sel

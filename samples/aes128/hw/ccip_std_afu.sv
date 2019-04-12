@@ -55,7 +55,7 @@ module `TOP_IFC_NAME
   output t_if_ccip_Tx  pck_af2cp_sTx       // CCI-P Tx Port
 );
 
-  localparam MPF_DFH_MMIO_ADDR = 'h1000;
+  localparam MPF_DFH_MMIO_ADDR = 'h400;
 
   logic clk;
   logic resetQQQQ;
