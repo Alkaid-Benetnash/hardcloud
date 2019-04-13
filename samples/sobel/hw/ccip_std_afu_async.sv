@@ -32,13 +32,8 @@
 `include "cci_mpf_if.vh"
 
 import ccip_if_pkg::*;
-import smith_waterman_pkg::*;
-`ifdef WITH_MUX
-        `define TOP_IFC_NAME `AFU_WITHMUX_NAME
-`else
-        `define TOP_IFC_NAME `AFU_NOMUX_NAME
-`endif
-module `TOP_IFC_NAME
+import sobel_pkg::*;
+module sobel_top_async
 (
   // CCI-P Clocks and Resets
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
@@ -63,12 +58,10 @@ module `TOP_IFC_NAME
   logic resetQQ;
   logic resetQQQ;
 
-  logic [  7:0] data_tx;
+  logic [511:0] data_tx;
   logic         valid_tx;
   logic [511:0] data_rx;
   logic         valid_rx;
-  logic [ 31:0] count;
-  logic         conf;
 
   t_hc_control  hc_control;
   t_hc_address  hc_dsm_base;
@@ -77,11 +70,8 @@ module `TOP_IFC_NAME
   t_if_ccip_Tx  ccip_tx;
   t_if_ccip_Rx  ccip_rx;
 
-  t_if_ccip_Rx  afck_cp2af_sRx;
-  t_if_ccip_Tx  afck_af2cp_sTx;
-
   // combinational logic
-  assign clk   = pClkDiv4;
+  assign clk   = pClk;
   always @(posedge clk) begin
       resetQQQ <= pck_cp2af_softReset;
       resetQQ <= resetQQQ;
@@ -136,8 +126,8 @@ module `TOP_IFC_NAME
     .pck_cp2af_softReset (reset),
     .pck_cp2af_pwrState  (pck_cp2af_pwrState),
     .pck_cp2af_error     (pck_cp2af_error),
-    .pck_cp2af_sRx       (afck_cp2af_sRx),
-    .pck_af2cp_sTx       (afck_af2cp_sTx),
+    .pck_cp2af_sRx       (pck_cp2af_sRx),
+    .pck_af2cp_sTx       (pck_af2cp_sTx),
     .fiu                 (fiu)
   );
 
@@ -160,20 +150,7 @@ module `TOP_IFC_NAME
     .c1NotEmpty()
   );
 
-  ccip_async_shim uu_ccip_async_shim
-  (
-    .bb_softreset     (pck_cp2af_softReset),
-    .bb_clk           (pClk),
-    .bb_tx            (pck_af2cp_sTx),
-    .bb_rx            (pck_cp2af_sRx),
-    // .afu_softreset    (reset),
-    .afu_clk          (clk),
-    .afu_tx           (afck_af2cp_sTx),
-    .afu_rx           (afck_cp2af_sRx),
-    .async_shim_error ()
-  );
-
-  smith_waterman_csr uu_smith_waterman_csr
+  sobel_csr uu_sobel_csr
   (
     .clk          (clk),
     .reset        (reset),
@@ -184,35 +161,31 @@ module `TOP_IFC_NAME
     .afu          (afu_csrs)
   );
 
-  smith_waterman_requestor uu_smith_waterman_requestor
-  (
-    .clk           (clk),
-    .reset         (reset),
-    .hc_control    (hc_control),
-    .hc_dsm_base   (hc_dsm_base),
-    .hc_buffer     (hc_buffer),
-    .data_in       (data_rx),
-    .valid_in      (valid_rx),
-    .ccip_rx       (ccip_rx),
-    .ccip_c0_tx    (ccip_tx.c0),
-    .ccip_c1_tx    (ccip_tx.c1),
-    .data_out      (data_tx),
-    .valid_out     (valid_tx),
-    .count_out     (count),
-    .conf_out      (conf)
-  );
-
-  sw_top_affine uu_sw_top_affine
+  sobel_requestor uu_sobel_requestor
   (
     .clk          (clk),
-    .rst          (reset),
-    .data_in      (data_tx),
-    .valid_in     (valid_tx),
-    .data_out     (data_rx),
-    .valid_out    (valid_rx),
-    .count_in     (count),
-    .conf_in      (conf)
+    .reset        (reset),
+    .hc_control   (hc_control),
+    .hc_dsm_base  (hc_dsm_base),
+    .hc_buffer    (hc_buffer),
+    .data_in      (data_rx),
+    .valid_in     (valid_rx),
+    .ccip_rx      (ccip_rx),
+    .ccip_c0_tx   (ccip_tx.c0),
+    .ccip_c1_tx   (ccip_tx.c1),
+    .data_out     (data_tx),
+    .valid_out    (valid_tx)
   );
 
-endmodule : `TOP_IFC_NAME
+  sobel uu_sobel
+  (
+    .clk       (clk),
+    .reset     (reset),
+    .data_in   (data_tx),
+    .valid_in  (valid_tx),
+    .data_out  (data_rx),
+    .valid_out (valid_rx)
+  );
+
+endmodule : sobel_top_async
 

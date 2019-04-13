@@ -55,142 +55,30 @@ module `TOP_IFC_NAME
   output t_if_ccip_Tx  pck_af2cp_sTx       // CCI-P Tx Port
 );
 
-  localparam MPF_DFH_MMIO_ADDR = 'h400;
+    logic async_softreset;
+    t_if_ccip_Tx async_tx;
+    t_if_ccip_Tx async_rx;
 
-  logic clk;
-  logic reset;
-  logic resetQ;
-  logic resetQQ;
-  logic resetQQQ;
+    ccip_async_shim async_shim(
+        .bb_softreset(pck_cp2af_softReset),
+        .bb_clk(pClk),
+        .bb_tx(pck_af2cp_sTx),
+        .bb_rx(pck_cp2af_sRx),
+        .afu_softreset(async_softreset),
+        .afu_clk(pClkDiv2),
+        .afu_tx(async_tx),
+        .afu_rx(async_rx)
+        );
 
-  logic [511:0] data_tx;
-  logic         valid_tx;
-  logic [511:0] data_rx;
-  logic         valid_rx;
+    sobel_top_async sobel_top_async(
+        .pClk(pClkDiv2),
+        .pClkDiv2(pClkDiv4),
+        .pClkDiv4(pClkDiv4),
+        .pck_cp2af_softReset(async_softreset),
+        .pck_cp2af_pwrState(pck_cp2af_pwrState),
+        .pck_cp2af_error(pck_cp2af_error),
+        .pck_cp2af_sRx(async_rx),
+        .pck_af2cp_sTx(async_tx)
+        );
 
-  t_hc_control  hc_control;
-  t_hc_address  hc_dsm_base;
-  t_hc_buffer   hc_buffer[HC_BUFFER_SIZE];
-
-  t_if_ccip_Tx  ccip_tx;
-  t_if_ccip_Rx  ccip_rx;
-
-  // combinational logic
-  assign clk   = pClk;
-  always @(posedge clk) begin
-      resetQQQ <= pck_cp2af_softReset;
-      resetQQ <= resetQQQ;
-      resetQ <= resetQQ;
-      reset <= resetQ;
-  end
-
-  always_comb begin
-    ccip_rx.c0 = afu.c0Rx;
-    ccip_rx.c1 = afu.c1Rx;
-
-    ccip_rx.c0TxAlmFull = afu.c0TxAlmFull;
-    ccip_rx.c1TxAlmFull = afu.c1TxAlmFull;
-
-    afu.c0Tx = cci_mpf_cvtC0TxFromBase(ccip_tx.c0);
-    afu.c1Tx = cci_mpf_cvtC1TxFromBase(ccip_tx.c1);
-
-    if (cci_mpf_c0TxIsReadReq(afu.c0Tx)) begin
-      afu.c0Tx.hdr.ext.addrIsVirtual       = 1'b1;
-      afu.c0Tx.hdr.ext.mapVAtoPhysChannel  = 1'b1;
-      afu.c0Tx.hdr.ext.checkLoadStoreOrder = 1'b1;
-    end
-
-    if (cci_mpf_c1TxIsWriteReq(afu.c1Tx)) begin
-      afu.c1Tx.hdr.ext.addrIsVirtual       = 1'b1;
-      afu.c1Tx.hdr.ext.mapVAtoPhysChannel  = 1'b1;
-      afu.c1Tx.hdr.ext.checkLoadStoreOrder = 1'b1;
-    end
-
-    afu.c2Tx.mmioRdValid = 1'b0;
-  end
-
-  // cci_mpf
-
-  cci_mpf_if fiu(.clk(clk));
-  cci_mpf_if afu(.clk(clk));
-  cci_mpf_if afu_csrs(.clk(clk));
-
-  ccip_wires_to_mpf
-  #(
-    // All inputs and outputs in PR region (AFU) must be registered!
-    .REGISTER_INPUTS(1),
-    .REGISTER_OUTPUTS(1)
-  )
-  map_ifc
-  (
-    .pClk                (clk),
-    .pClkDiv2            (pClkDiv2),
-    .pClkDiv4            (pClkDiv4),
-    .uClk_usr            (uClk_usr),
-    .uClk_usrDiv2        (uClk_usrDiv2),
-    .pck_cp2af_softReset (reset),
-    .pck_cp2af_pwrState  (pck_cp2af_pwrState),
-    .pck_cp2af_error     (pck_cp2af_error),
-    .pck_cp2af_sRx       (pck_cp2af_sRx),
-    .pck_af2cp_sTx       (pck_af2cp_sTx),
-    .fiu                 (fiu)
-  );
-
-  cci_mpf
-  #(
-    .SORT_READ_RESPONSES(1),
-    .PRESERVE_WRITE_MDATA(1),
-    .ENABLE_VC_MAP(0),
-    .ENABLE_DYNAMIC_VC_MAPPING(1),
-    .ENFORCE_WR_ORDER(0),
-    .ENABLE_PARTIAL_WRITES(0),
-    .DFH_MMIO_BASE_ADDR(MPF_DFH_MMIO_ADDR)
-  )
-  mpf
-  (
-    .clk(clk),
-    .fiu(afu_csrs),
-    .afu,
-    .c0NotEmpty(),
-    .c1NotEmpty()
-  );
-
-  sobel_csr uu_sobel_csr
-  (
-    .clk          (clk),
-    .reset        (reset),
-    .hc_control   (hc_control),
-    .hc_dsm_base  (hc_dsm_base),
-    .hc_buffer    (hc_buffer),
-    .fiu          (fiu),
-    .afu          (afu_csrs)
-  );
-
-  sobel_requestor uu_sobel_requestor
-  (
-    .clk          (clk),
-    .reset        (reset),
-    .hc_control   (hc_control),
-    .hc_dsm_base  (hc_dsm_base),
-    .hc_buffer    (hc_buffer),
-    .data_in      (data_rx),
-    .valid_in     (valid_rx),
-    .ccip_rx      (ccip_rx),
-    .ccip_c0_tx   (ccip_tx.c0),
-    .ccip_c1_tx   (ccip_tx.c1),
-    .data_out     (data_tx),
-    .valid_out    (valid_tx)
-  );
-
-  sobel uu_sobel
-  (
-    .clk       (clk),
-    .reset     (reset),
-    .data_in   (data_tx),
-    .valid_in  (valid_tx),
-    .data_out  (data_rx),
-    .valid_out (valid_rx)
-  );
-
-endmodule : `TOP_IFC_NAME
-
+endmodule

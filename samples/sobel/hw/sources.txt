@@ -10,3 +10,4 @@ sobel_csr.sv
 sobel_fifo.sv
 sobel_requestor.sv
 ccip_std_afu.sv
+ccip_std_afu_async.sv
