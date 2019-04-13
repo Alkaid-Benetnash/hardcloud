@@ -81,4 +81,4 @@ module `TOP_IFC_NAME
         .pck_af2cp_sTx(async_tx)
         );
 
-endmodule
+endmodule : `TOP_IFC_NAME

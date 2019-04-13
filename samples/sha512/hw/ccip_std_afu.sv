@@ -33,8 +33,12 @@
 
 import ccip_if_pkg::*;
 import sha512_pkg::*;
-
-module ccip_std_afu
+`ifdef WITH_MUX
+            `define TOP_IFC_NAME `AFU_WITHMUX_NAME
+`else
+            `define TOP_IFC_NAME `AFU_NOMUX_NAME
+`endif
+module `TOP_IFC_NAME
 (
   // CCI-P Clocks and Resets
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
@@ -141,6 +145,9 @@ module ccip_std_afu
     .SORT_READ_RESPONSES(1),
     .PRESERVE_WRITE_MDATA(1),
     .ENABLE_VC_MAP(0),
+`ifndef WITH_MUX
+        .ENABLE_VTP(1),
+`endif
     .ENABLE_DYNAMIC_VC_MAPPING(1),
     .ENFORCE_WR_ORDER(0),
     .ENABLE_PARTIAL_WRITES(0),
@@ -207,5 +214,5 @@ module ccip_std_afu
     .ready        (ready)
   );
 
-endmodule : ccip_std_afu
+endmodule : `TOP_IFC_NAME
 

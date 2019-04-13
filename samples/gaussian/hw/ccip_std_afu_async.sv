@@ -51,7 +51,7 @@ module ccip_std_afu_async
   output t_if_ccip_Tx  pck_af2cp_sTx       // CCI-P Tx Port
 );
 
-  localparam MPF_DFH_MMIO_ADDR = 'h1000;
+  localparam MPF_DFH_MMIO_ADDR = 'h400;
 
   logic clk;
   logic reset;
@@ -137,6 +137,9 @@ module ccip_std_afu_async
     .SORT_READ_RESPONSES(1),
     .PRESERVE_WRITE_MDATA(1),
     .ENABLE_VC_MAP(0),
+`ifndef WITH_MUX
+    .ENABLE_VTP(1),
+`endif
     .ENABLE_DYNAMIC_VC_MAPPING(1),
     .ENFORCE_WR_ORDER(0),
     .ENABLE_PARTIAL_WRITES(0),

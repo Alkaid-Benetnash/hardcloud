@@ -33,8 +33,12 @@
 
 import ccip_if_pkg::*;
 import aes128_pkg::*;
-
-module aes128_mux
+`ifdef WITH_MUX
+            `define TOP_IFC_NAME `AFU_WITHMUX_NAME
+`else
+            `define TOP_IFC_NAME `AFU_NOMUX_NAME
+`endif
+module `TOP_IFC_NAME
 (
   // CCI-P Clocks and Resets
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
@@ -51,7 +55,7 @@ module aes128_mux
   output t_if_ccip_Tx  pck_af2cp_sTx       // CCI-P Tx Port
 );
 
-  localparam MPF_DFH_MMIO_ADDR = 'h1000;
+  localparam MPF_DFH_MMIO_ADDR = 'h400;
 
   logic clk;
   logic resetQQQQ;
@@ -144,6 +148,9 @@ module aes128_mux
     .SORT_READ_RESPONSES(1),
     .PRESERVE_WRITE_MDATA(1),
     .ENABLE_VC_MAP(0),
+`ifndef WITH_MUX
+    .ENABLE_VTP(1),
+`endif
     .ENABLE_DYNAMIC_VC_MAPPING(1),
     .ENFORCE_WR_ORDER(0),
     .ENABLE_PARTIAL_WRITES(0),
@@ -212,5 +219,5 @@ module aes128_mux
     .valid_out    (valid_rx)
   );
 
-endmodule : aes128_mux
+endmodule : `TOP_IFC_NAME
 
