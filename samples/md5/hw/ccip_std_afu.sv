@@ -59,6 +59,10 @@ module `TOP_IFC_NAME
 
   logic clk;
   logic reset;
+  logic resetQ;
+  logic resetQQ;
+  logic resetQQQ;
+  logic resetQQQQ;
 
   logic [511:0] data_tx;
   logic         valid_tx;
@@ -77,7 +81,14 @@ module `TOP_IFC_NAME
 
   // combinational logic
   assign clk   = pClkDiv2;
-  assign reset = pck_cp2af_softReset;
+  always @(posedge clk)
+  begin
+      resetQQQQ <= pck_cp2af_softReset;
+      resetQQQ <= resetQQQQ;
+      resetQQ <= resetQQQ;
+      resetQ <= resetQQ;
+      reset <= resetQ;
+  end
 
   always_comb begin
     ccip_rx.c0 = afu.c0Rx;
