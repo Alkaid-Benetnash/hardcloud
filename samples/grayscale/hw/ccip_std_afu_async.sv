@@ -31,6 +31,8 @@
 // Include MPF data types, including the CCI interface pacakge.
 `include "cci_mpf_if.vh"
 
+import ccip_if_pkg::*;
+import grayscale_pkg::*;
 module ccip_std_afu_async
 (
   // CCI-P Clocks and Resets
