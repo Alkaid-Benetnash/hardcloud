@@ -8,3 +8,4 @@ grayscale_csr.sv
 grayscale_fifo.sv
 grayscale_requestor.sv
 ccip_std_afu.sv
+ccip_std_afu_async.sv
