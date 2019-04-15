@@ -203,5 +203,5 @@ module `TOP_IFC_NAME
     .valid_out    (valid_rx)
   );
 
-endmodule : ccip_std_afu
+endmodule : `TOP_IFC_NAME
 
