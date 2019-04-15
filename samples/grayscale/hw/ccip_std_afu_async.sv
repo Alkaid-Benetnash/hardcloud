@@ -182,5 +182,5 @@ module ccip_std_afu_async
     .valid_out (valid_rx)
   );
 
-endmodule : `TOP_IFC_NAME
+endmodule
 
