@@ -80,7 +80,7 @@ module `TOP_IFC_NAME
   t_if_ccip_Tx  afck_af2cp_sTx;
 
   // combinational logic
-  assign clk   = pClkDiv2;
+  assign clk   = pClkDiv4;
   always @(posedge clk)
   begin
       resetQQQQ <= pck_cp2af_softReset;
