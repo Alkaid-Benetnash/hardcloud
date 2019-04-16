@@ -3,9 +3,9 @@
 import ccip_if_pkg::*;
 import gaussian_pkg::*;
 `ifdef WITH_MUX
-        `define TOP_IFC_NAME `AFU_WITHMUX_NAME
+        `define GAUSSIAN_TOP_IFC_NAME `GAUSSIAN_WITHMUX_NAME
 `else
-        `define TOP_IFC_NAME `AFU_NOMUX_NAME
+        `define GAUSSIAN_TOP_IFC_NAME `GAUSSIAN_NOMUX_NAME
 `endif
 module `TOP_IFC_NAME
 (
@@ -60,7 +60,7 @@ module `TOP_IFC_NAME
         .afu_rx(sRx_async)
         );
 
-    ccip_std_afu_async gaussian(
+    gaussian_ccip_std_afu_async gaussian(
         .pClk(pClkDiv2),
         .pClkDiv2(pClkDiv4),
         .pck_cp2af_softReset(reset_async),

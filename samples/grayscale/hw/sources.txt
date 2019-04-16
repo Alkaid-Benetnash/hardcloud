@@ -1,6 +1,6 @@
 +incdir+.
-+define+AFU_WITHMUX_NAME=grayscale_top
-+define+AFU_NOMUX_NAME=ccip_std_afu
++define+GRAYSCALE_WITHMUX_NAME=grayscale_top
++define+GRAYSCALE_NOMUX_NAME=ccip_std_afu
 
 grayscale_pkg.sv
 grayscale.sv

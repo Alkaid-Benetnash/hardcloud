@@ -34,11 +34,11 @@
 import ccip_if_pkg::*;
 import sobel_pkg::*;
 `ifdef WITH_MUX
-        `define TOP_IFC_NAME `AFU_WITHMUX_NAME
+        `define SOBEL_TOP_IFC_NAME `SOBEL_WITHMUX_NAME
 `else
-        `define TOP_IFC_NAME `AFU_NOMUX_NAME
+        `define SOBEL_TOP_IFC_NAME `SOBEL_NOMUX_NAME
 `endif
-module `TOP_IFC_NAME
+module `SOBEL_TOP_IFC_NAME
 (
   // CCI-P Clocks and Resets
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
@@ -81,4 +81,4 @@ module `TOP_IFC_NAME
         .pck_af2cp_sTx(async_tx)
         );
 
-endmodule : `TOP_IFC_NAME
+endmodule : `SOBEL_TOP_IFC_NAME

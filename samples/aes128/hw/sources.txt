@@ -1,6 +1,6 @@
 +incdir+.
-+define+AFU_WITHMUX_NAME=aes128_top
-+define+AFU_NOMUX_NAME=ccip_std_afu
++define+AES128_WITHMUX_NAME=aes128_top
++define+AES128_NOMUX_NAME=ccip_std_afu
 
 AddRoundKey.v
 KeyExpantion.v

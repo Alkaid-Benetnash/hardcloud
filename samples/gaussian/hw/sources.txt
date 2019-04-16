@@ -1,6 +1,6 @@
 +incdir+.
-+define+AFU_WITHMUX_NAME=gaussian_top
-+define+AFU_NOMUX_NAME=ccip_std_afu
++define+GAUSSIAN_WITHMUX_NAME=gaussian_top
++define+GAUSSIAN_NOMUX_NAME=ccip_std_afu
 
 gaussian_pkg.sv
 gaussian_unit.sv

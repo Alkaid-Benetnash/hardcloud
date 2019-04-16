@@ -1,6 +1,6 @@
 +incdir+.
-+define+AFU_WITHMUX_NAME=smith_waterman_top
-+define+AFU_NOMUX_NAME=ccip_std_afu
++define+SW_WITHMUX_NAME=smith_waterman_top
++define+SW_NOMUX_NAME=ccip_std_afu
 
 smith_waterman_pkg.sv
 sw_pe_affine.sv

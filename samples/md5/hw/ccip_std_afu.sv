@@ -34,11 +34,11 @@
 import ccip_if_pkg::*;
 import md5_pkg::*;
 `ifdef WITH_MUX
-            `define TOP_IFC_NAME `AFU_WITHMUX_NAME
+            `define MD5_TOP_IFC_NAME `MD5_WITHMUX_NAME
 `else
-            `define TOP_IFC_NAME `AFU_NOMUX_NAME
+            `define MD5_TOP_IFC_NAME `MD5_NOMUX_NAME
 `endif
-module `TOP_IFC_NAME
+module `MD5_TOP_IFC_NAME
 (
   // CCI-P Clocks and Resets
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
@@ -214,5 +214,5 @@ module `TOP_IFC_NAME
     .valid_out    (valid_rx)
   );
 
-endmodule : `TOP_IFC_NAME
+endmodule : `MD5_TOP_IFC_NAME
 

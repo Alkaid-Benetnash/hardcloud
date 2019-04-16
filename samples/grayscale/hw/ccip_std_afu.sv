@@ -1,9 +1,9 @@
 import ccip_if_pkg::*;
 import grayscale_pkg::*;
 `ifdef WITH_MUX
-        `define TOP_IFC_NAME `AFU_WITHMUX_NAME
+        `define GRAYSCALE_TOP_IFC_NAME `GRAYSCALE_WITHMUX_NAME
 `else
-        `define TOP_IFC_NAME `AFU_NOMUX_NAME
+        `define GRAYSCALE_TOP_IFC_NAME `GRAYSCALE_NOMUX_NAME
 `endif
 module `TOP_IFC_NAME
 (

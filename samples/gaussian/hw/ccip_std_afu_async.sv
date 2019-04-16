@@ -34,7 +34,7 @@
 import ccip_if_pkg::*;
 import gaussian_pkg::*;
 
-module ccip_std_afu_async
+module gaussian_ccip_std_afu_async
 (
   // CCI-P Clocks and Resets
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock

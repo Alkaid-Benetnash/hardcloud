@@ -1,6 +1,6 @@
 +incdir+.
-+define+AFU_WITHMUX_NAME=sha512_top
-+define+AFU_NOMUX_NAME=ccip_std_afu
++define+SHA512_WITHMUX_NAME=sha512_top
++define+SHA512_NOMUX_NAME=ccip_std_afu
 
 sha512_pkg.sv
 sha512.sv

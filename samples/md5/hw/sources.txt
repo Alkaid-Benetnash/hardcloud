@@ -1,6 +1,6 @@
 +incdir+.
-+define+AFU_WITHMUX_NAME=md5_top
-+define+AFU_NOMUX_NAME=ccip_std_afu
++define+MD5_WITHMUX_NAME=md5_top
++define+MD5_NOMUX_NAME=ccip_std_afu
 
 md5_pkg.sv
 md5.sv

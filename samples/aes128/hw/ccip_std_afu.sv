@@ -34,11 +34,11 @@
 import ccip_if_pkg::*;
 import aes128_pkg::*;
 `ifdef WITH_MUX
-            `define TOP_IFC_NAME `AFU_WITHMUX_NAME
+            `define AES128_TOP_IFC_NAME `AES128_WITHMUX_NAME
 `else
-            `define TOP_IFC_NAME `AFU_NOMUX_NAME
+            `define AES128_TOP_IFC_NAME `AES128_NOMUX_NAME
 `endif
-module `TOP_IFC_NAME
+module `AES128_TOP_IFC_NAME
 (
   // CCI-P Clocks and Resets
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
@@ -219,5 +219,5 @@ module `TOP_IFC_NAME
     .valid_out    (valid_rx)
   );
 
-endmodule : `TOP_IFC_NAME
+endmodule : `AES128_TOP_IFC_NAME
 

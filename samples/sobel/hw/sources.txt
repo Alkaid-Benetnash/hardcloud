@@ -1,6 +1,6 @@
 +incdir+.
-+define+AFU_WITHMUX_NAME=sobel_top
-+define+AFU_NOMUX_NAME=ccip_std_afu
++define+SOBEL_WITHMUX_NAME=sobel_top
++define+SOBEL_NOMUX_NAME=ccip_std_afu
 
 sobel_pkg.sv
 rgb2luma.sv

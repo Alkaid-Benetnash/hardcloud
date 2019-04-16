@@ -1,6 +1,6 @@
 +incdir+
-+define+AFU_WITHMUX_NAME=fir_top
-+define+AFU_NOMUX_NAME=ccip_std_afu
++define+FIR_WITHMUX_NAME=fir_top
++define+FIR_NOMUX_NAME=ccip_std_afu
 
 fir_pkg.sv
 

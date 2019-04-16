@@ -34,11 +34,11 @@
 import ccip_if_pkg::*;
 import grn_pkg::*;
 `ifdef WITH_MUX
-        `define TOP_IFC_NAME `AFU_WITHMUX_NAME
+        `define GRN_TOP_IFC_NAME `GRN_WITHMUX_NAME
 `else
-        `define TOP_IFC_NAME `AFU_NOMUX_NAME
+        `define GRN_TOP_IFC_NAME `GRN_NOMUX_NAME
 `endif
-module `TOP_IFC_NAME
+module `GRN_TOP_IFC_NAME
 (
   // CCI-P Clocks and Resets
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
@@ -213,5 +213,5 @@ module `TOP_IFC_NAME
     .transient  (transient)
   );
 
-endmodule : `TOP_IFC_NAME
+endmodule : `GRN_TOP_IFC_NAME
 

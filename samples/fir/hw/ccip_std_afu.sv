@@ -34,11 +34,11 @@
 import ccip_if_pkg::*;
 import fir_pkg::*;
 `ifdef WITH_MUX
-        `define TOP_IFC_NAME `AFU_WITHMUX_NAME
+        `define FIR_TOP_IFC_NAME `FIR_WITHMUX_NAME
 `else
-        `define TOP_IFC_NAME `AFU_NOMUX_NAME
+        `define FIR_TOP_IFC_NAME `FIR_NOMUX_NAME
 `endif
-module `TOP_IFC_NAME
+module `FIR_TOP_IFC_NAME
 (
   // CCI-P Clocks and Resets
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
@@ -211,5 +211,5 @@ module `TOP_IFC_NAME
     .valid_out    (valid_rx)
   );
 
-endmodule : `TOP_IFC_NAME
+endmodule : `FIR_TOP_IFC_NAME
 
