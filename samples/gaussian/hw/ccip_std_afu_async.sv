@@ -191,5 +191,5 @@ module gaussian_ccip_std_afu_async
     .valid_out (valid_rx)
   );
 
-endmodule : ccip_std_afu_async
+endmodule : gaussian_ccip_std_afu_async
 

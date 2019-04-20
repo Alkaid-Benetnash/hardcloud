@@ -7,7 +7,7 @@ import gaussian_pkg::*;
 `else
         `define GAUSSIAN_TOP_IFC_NAME `GAUSSIAN_NOMUX_NAME
 `endif
-module `TOP_IFC_NAME
+module `GAUSSIAN_TOP_IFC_NAME
 (
   input  logic         pClk,               // 400MHz - CCI-P clock domain. Primary interface clock
   input  logic         pClkDiv2,           // 200MHz - CCI-P clock domain.

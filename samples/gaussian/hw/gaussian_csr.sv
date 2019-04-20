@@ -42,6 +42,19 @@ module gaussian_csr
 
   assign mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
 
+    logic [63:0] c1tx_cnt;
+    logic fiu_c1tx_valid_q;
+    always_ff @(posedge clk) begin
+        fiu_c1tx_valid_q <= fiu.c1Tx.valid;
+        if (reset) begin
+            c1tx_cnt <= 0;
+        end
+        else begin
+            c1tx_cnt <= c1tx_cnt + fiu_c1tx_valid_q;
+        end
+    end
+
+
   // Register incoming messages
   always_ff @(posedge clk)
   begin
@@ -80,7 +93,7 @@ module gaussian_csr
         (HC_AFU_ID_HIGH >> 2): tx_mmio_channel.data <= afu_id[127:64];
 
         // DFH_RSVD0
-        6: tx_mmio_channel.data <= t_ccip_mmioData'(0);
+        6: tx_mmio_channel.data <= c1tx_cnt;
 
         // DFH_RSVD1
         8: tx_mmio_channel.data <= t_ccip_mmioData'(0);
