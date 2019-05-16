@@ -11,13 +11,20 @@ module gaussian_csr
   output t_hc_address    hc_dsm_base,
   output t_hc_buffer     hc_buffer[HC_BUFFER_SIZE],
   cci_mpf_if.to_fiu      fiu,
-  cci_mpf_if.to_afu      afu
+  cci_mpf_if.to_afu      afu,
+
+  input t_rd_state rd_state,
+  input t_wr_state wr_state
 );
 
   // register map to HardCloud
   localparam HC_DEVICE_HEADER    = 16'h000; // 64b - RO  Constant: 0x1000010000000000.
   localparam HC_AFU_ID_LOW       = 16'h008; // 64b - RO  Constant: 0xC000C9660D824272.
   localparam HC_AFU_ID_HIGH      = 16'h010; // 64b - RO  Constant: 0x9AEFFE5F84570612.
+  localparam HC_AFU_CNT_C0TX     = 16'h030;
+  localparam HC_AFU_CNT_C1TX     = 16'h038;
+  localparam HC_AFU_RD_STATE     = 16'h040;
+  localparam HC_AFU_WR_STATE     = 16'h048;
 
   t_if_ccip_c0_Rx rx_mmio_channel;
   t_if_ccip_c2_Tx tx_mmio_channel;
@@ -42,14 +49,17 @@ module gaussian_csr
 
   assign mmio_req_hdr = t_ccip_c0_ReqMmioHdr'(rx_mmio_channel.hdr);
 
-    logic [63:0] c1tx_cnt;
-    logic fiu_c1tx_valid_q;
+    logic [63:0] c0tx_cnt, c1tx_cnt;
+    logic fiu_c0tx_valid_q, fiu_c1tx_valid_q;
     always_ff @(posedge clk) begin
+        fiu_c0tx_valid_q <= fiu.c0Tx.valid;
         fiu_c1tx_valid_q <= fiu.c1Tx.valid;
         if (reset) begin
+            c0tx_cnt <= 0;
             c1tx_cnt <= 0;
         end
         else begin
+            c0tx_cnt <= c0tx_cnt + fiu_c0tx_valid_q;
             c1tx_cnt <= c1tx_cnt + fiu_c1tx_valid_q;
         end
     end
@@ -93,10 +103,15 @@ module gaussian_csr
         (HC_AFU_ID_HIGH >> 2): tx_mmio_channel.data <= afu_id[127:64];
 
         // DFH_RSVD0
-        6: tx_mmio_channel.data <= c1tx_cnt;
+        6: tx_mmio_channel.data <= t_ccip_mmioData'(0);
 
         // DFH_RSVD1
         8: tx_mmio_channel.data <= t_ccip_mmioData'(0);
+
+        (HC_AFU_CNT_C0TX >> 2): tx_mmio_channel.data <= c0tx_cnt;
+        (HC_AFU_CNT_C1TX >> 2): tx_mmio_channel.data <= c1tx_cnt;
+        (HC_AFU_RD_STATE >> 2): tx_mmio_channel.data <= rd_state;
+        (HC_AFU_WR_STATE >> 2): tx_mmio_channel.data <= wr_state;
 
         default: tx_mmio_channel.data <= t_ccip_mmioData'('0);
       endcase

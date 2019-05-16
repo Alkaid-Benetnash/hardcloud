@@ -154,6 +154,10 @@ module gaussian_ccip_std_afu_async
     .c1NotEmpty()
   );
 
+  // dbg
+  t_rd_state rd_state;
+  t_wr_state wr_state;
+
   gaussian_csr uu_gaussian_csr
   (
     .clk          (clk),
@@ -162,7 +166,10 @@ module gaussian_ccip_std_afu_async
     .hc_dsm_base  (hc_dsm_base),
     .hc_buffer    (hc_buffer),
     .fiu          (fiu),
-    .afu          (afu_csrs)
+    .afu          (afu_csrs),
+    // dbg
+    .rd_state(rd_state),
+    .wr_state(wr_state)
   );
 
   gaussian_requestor uu_gaussian_requestor
@@ -178,7 +185,10 @@ module gaussian_ccip_std_afu_async
     .ccip_c0_tx   (ccip_tx.c0),
     .ccip_c1_tx   (ccip_tx.c1),
     .data_out     (data_tx),
-    .valid_out    (valid_tx)
+    .valid_out    (valid_tx),
+    // dbg
+    .rd_state_dbg(rd_state),
+    .wr_state_dbg(wr_state)
   );
 
   gaussian uu_gaussian

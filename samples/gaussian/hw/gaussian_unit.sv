@@ -21,8 +21,8 @@ module gaussian_unit
   always_ff @(posedge clk) begin
     if (!rst_b) begin
       for (int i = 0; i < KERNEL_SIZE; i++) begin
-        row_buffer[0][i] <= '0;
-        row_buffer[1][i] <= '0;
+        row_buffer[0][i*8 +: 8] <= '0;
+        row_buffer[1][i*8 +: 8] <= '0;
       end
     end
     else if (valid_in) begin

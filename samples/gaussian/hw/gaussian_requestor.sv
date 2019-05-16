@@ -16,7 +16,10 @@ module gaussian_requestor
   output t_if_ccip_c0_Tx ccip_c0_tx,
   output t_if_ccip_c1_Tx ccip_c1_tx,
   output logic [511:0]   data_out,
-  output logic           valid_out
+  output logic           valid_out,
+
+  output t_rd_state rd_state_dbg,
+  output t_wr_state wr_state_dbg
 );
 
   t_block enq_data;
@@ -321,6 +324,11 @@ module gaussian_requestor
           end
         end
     endcase
+  end
+
+  always_ff @(posedge clk) begin
+      rd_state_dbg <= rd_state;
+      wr_state_dbg <= wr_state;
   end
 
 endmodule : gaussian_requestor
