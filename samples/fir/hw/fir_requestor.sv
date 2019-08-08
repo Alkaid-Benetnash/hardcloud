@@ -5,7 +5,7 @@ import fir_pkg::*;
 
 module fir_requestor
 #(
-  parameter FIR_FIFO_DEPTH = 512
+  parameter FIR_FIFO_DEPTH = 16384
 )
 (
   input  logic           clk,
@@ -106,8 +106,8 @@ module fir_requestor
         request = '0;
       end
 
-      if ((ccip_rx.c0.rspValid) &&
-        (ccip_rx.c0.hdr.resp_type == eRSP_RDLINE)) begin
+      if ((ccip_rx.c1.rspValid) &&
+        (ccip_rx.c1.hdr.resp_type == eRSP_RDLINE)) begin
         response = 32'd64;
       end
       else begin

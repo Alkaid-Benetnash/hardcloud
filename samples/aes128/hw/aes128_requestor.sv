@@ -5,7 +5,7 @@ import aes128_pkg::*;
 
 module aes128_requestor
 #(
-  parameter AES128_FIFO_DEPTH = 32
+  parameter AES128_FIFO_DEPTH = 1024
 )
 (
   input  logic           clk,
@@ -107,8 +107,8 @@ module aes128_requestor
         request = 32'h0;
       end
 
-      if ((ccip_rx.c0.rspValid) &&
-        (ccip_rx.c0.hdr.resp_type == eRSP_RDLINE)) begin
+      if ((ccip_rx.c1.rspValid) &&
+        (ccip_rx.c1.hdr.resp_type == eRSP_RDLINE)) begin
         response = 32'h4;
       end
       else begin
