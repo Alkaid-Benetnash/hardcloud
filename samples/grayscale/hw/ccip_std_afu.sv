@@ -5,7 +5,7 @@ import grayscale_pkg::*;
 `else
         `define GRAYSCALE_TOP_IFC_NAME `GRAYSCALE_NOMUX_NAME
 `endif
-module `TOP_IFC_NAME
+module `GRAYSCALE_TOP_IFC_NAME
 (
   // CCI-P Clocks and Resets
   input           logic             pClk,       
