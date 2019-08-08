@@ -75,9 +75,12 @@ module fir_fifo
 
   always_ff@(posedge clk or posedge reset) begin
     if (reset) begin
+    /* loop must terminte within 5000 iterations, but we don't need to initialize the array */
+    /*
       for (int i = 0; i < FIR_FIFO_DEPTH; i++) begin
         mem[i] <= '0;
       end
+    */
     end
     else begin
       if (enq_en && not_full) begin
